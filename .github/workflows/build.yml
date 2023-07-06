@@ -41,28 +41,28 @@ jobs:
         if: steps.deps.outputs.cache-hit != 'true'
         run: npm ci
 
-release:
-    name: Trigger Release
-    needs: [compile, lint]
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@master
-      -
-        name: Extract Branch Name
-        id: extract_branch
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-      -
-        name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@v4
-        env:
-          RUN_NUMBER: ${{ github.RUN_NUMBER }}
-        with:
-          name: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO }}
-          tags: "${{ secrets.NAME }},${{ secrets.NAME }}-${{ github.RUN_NUMBER }},${{ secrets.NAME }}-${{ steps.extract_branch.outputs.branch }}"
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          buildargs: RUN_NUMBER
+  release:
+      name: Trigger Release
+      needs: [compile, lint]
+      runs-on: ubuntu-latest
+      if: ${{ github.event_name != 'pull_request' }}
+      steps:
+        -
+          name: Checkout
+          uses: actions/checkout@master
+        -
+          name: Extract Branch Name
+          id: extract_branch
+          shell: bash
+          run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        -
+          name: Publish to Registry
+          uses: elgohr/Publish-Docker-Github-Action@v4
+          env:
+            RUN_NUMBER: ${{ github.RUN_NUMBER }}
+          with:
+            name: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.REPO }}
+            tags: "${{ secrets.NAME }},${{ secrets.NAME }}-${{ github.RUN_NUMBER }},${{ secrets.NAME }}-${{ steps.extract_branch.outputs.branch }}"
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_PASSWORD }}
+            buildargs: RUN_NUMBER
