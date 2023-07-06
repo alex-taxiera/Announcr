@@ -4,7 +4,7 @@ on:
   push:
     # push limited to branches we should deploy
     # possibly add release/* or feature/* or dev/*
-    branches: [master]
+    branches: [trunk]
   pull_request: {}
 
 jobs:
