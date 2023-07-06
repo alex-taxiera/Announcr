@@ -9,41 +9,8 @@ on:
 
 jobs:
 
-  install:
-    name: Install Dependencies
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-        node-version:
-          - 18x
-    runs-on: ${{ matrix.os }}
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@master
-      -
-        name: Setup Node.JS
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      -
-        name: Dependency Cache
-        id: deps
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-            ~/.npm
-          key: ${{ matrix.os }}_node-v${{ matrix.node-version }}_${{ hashFiles('**/package-lock.json') }}
-      -
-        name: npm ci
-        if: steps.deps.outputs.cache-hit != 'true'
-        run: npm ci
-
   release:
-      name: Trigger Release
-      needs: [compile, lint]
+      name: Docker build and publish
       runs-on: ubuntu-latest
       if: ${{ github.event_name != 'pull_request' }}
       steps:
