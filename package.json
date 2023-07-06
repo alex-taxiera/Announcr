@@ -16,6 +16,7 @@
     "nodemon": "^2.0.22"
   },
   "dependencies": {
+    "docker-secret-env": "^0.2.1",
     "oceanic.js": "^1.7.1"
   }
 }
